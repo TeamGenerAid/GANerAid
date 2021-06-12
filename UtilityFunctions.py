@@ -1,0 +1,47 @@
+import pandas as pd
+import seaborn as sns
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+
+
+def read_CSV(path):
+    data = pd.read_csv(path)
+    return data
+
+def read_excel(path):
+    data = pd.read_excel(path)
+    return data
+
+def get_binary_columns(data):
+    binary_columns = []
+    i = 0
+    for column in data:
+        if (len(data[column].unique()) == 2):
+            binary_columns.append(i)
+        i = i + 1
+    binary_columns
+
+def plot_correlation(data):
+    #TODO: make correlation matrix look pretty
+    corr = data.corr()
+    sns.heatmap(corr,
+                xticklabels=corr.columns.values,
+                yticklabels=corr.columns.values)
+
+def add_noise(x, noise_factor):
+    if x < 0:
+        return x + np.random.uniform(0, noise_factor)
+    if x > 0:
+        return x - np.random.uniform(0, noise_factor)
+
+def scale_and_add_noise(data, noise_factor, binary_columns):
+    numpy_data = data.to_numpy()
+    sc = MinMaxScaler((-1, 1))
+    sc = sc.fit(numpy_data)
+    scaled_data = sc.fit_transform(numpy_data)
+
+    noise_factor = 0.2
+
+    for i in binary_columns:
+        scaled_data[:, i] = np.array([add_noise(x, noise_factor) for x in scaled_data[:, i]])
+    return scaled_data
