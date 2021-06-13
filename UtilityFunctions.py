@@ -45,3 +45,15 @@ def scale_and_add_noise(data, noise_factor, binary_columns):
     for i in binary_columns:
         scaled_data[:, i] = np.array([add_noise(x, noise_factor) for x in scaled_data[:, i]])
     return scaled_data
+
+def generate_data(sample_size, data):
+    # TODO: generate Data
+    return data
+
+def evaluate(real_data, generated_data):
+    # TODO: evaluation template
+    plot_correlation(real_data)
+    plot_correlation(generated_data)
+    plot_correlation(real_data-generated_data)
+    return
+
