@@ -16,8 +16,7 @@ setup(
     install_requires=[
         'numpy>=1.19.5',
         'pandas>=1.2.4',
-        'tensorflow>=2.0',
-        'pytorch>=1.8.1',
+        'torch>=1.8.1',
         'scikit-learn>=0.22.2',
         'seaborn>=0.11.1'
 
