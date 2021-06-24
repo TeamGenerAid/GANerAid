@@ -2,12 +2,14 @@
 import pandas as pd
 from UtilityFunctions import set_or_default
 from DataProcessing import DataProcessor
+from GanTrainer import GanTrainer
 
 from model import GANerAidGAN
 
 
 class GANerAid():
-    def __init__(self, **kwargs):
+    def __init__(self, device, **kwargs):
+        self.device = device
         # hyper parameters
         self.lr_d = set_or_default("lr_d", 5e-4, kwargs)
         self.lr_g = set_or_default("lr_g", 5e-4, kwargs)
@@ -39,9 +41,18 @@ class GANerAid():
         self.processor = DataProcessor(dataset)
         self.dataset = self.processor.preprocess(self.binary_noise)
 
+        gan_trainer = GanTrainer(self.lr_d, self.lr_g)
+
+        rows = dataset.shape[0]
+        columns = dataset.shape[1]
+        noise_size = columns * self.noise_factor
+        self.gan = GANerAidGAN(noise_size, rows, columns, self.hidden_feature_space, self.device)
+
+        gan_trainer.train(self.dataset, self.gan, epochs)
+
 
         self.fitted = True
-        # todo: train gan
+
         print("fit gan")
 
     def continue_training(self, epochs=1000):
