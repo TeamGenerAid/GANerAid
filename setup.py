@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='GANerAid',
-    version='0.2',
+    version='0.7',
     url='https://github.com/TeamGenerAid/GANerAid'
         '',
     license='MIT License',
@@ -27,8 +27,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    packages=['GANerAid'],
     include_package_data = True,
     repository = "https://test.pypi.org/legacy/"
 )
