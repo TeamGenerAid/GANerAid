@@ -5,14 +5,14 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 
 
-def add_noise(x, binary_noise):
-    if x < 0:
-        return x + np.random.uniform(0, binary_noise)
-    if x > 0:
-        return x - np.random.uniform(0, binary_noise)
+def add_noise(value, binary_noise):
+    if value < 0:
+        return value + np.random.uniform(0, binary_noise)
+    if value > 0:
+        return value - np.random.uniform(0, binary_noise)
 
 
-class Preprocessing:
+class DataProcessor:
     def __init__(self, dataset):
         self.pandas_dataset = dataset
         self.binary_columns = get_binary_columns(self.pandas_dataset)
