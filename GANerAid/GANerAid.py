@@ -1,6 +1,7 @@
 # main entry point
 import pandas as pd
-from UtilityFunctions import set_or_default
+import numpy as np
+from UtilityFunctions import set_or_default, noise
 from DataProcessing import DataProcessor
 from GanTrainer import GanTrainer
 
@@ -20,12 +21,13 @@ class GANerAid():
         self.nr_of_rows = set_or_default("nr_of_rows", 25, kwargs)
         self.binary_noise = set_or_default("binary_noise", 0.2, kwargs)
 
-        #data processing
+        # data processing
         self.processor = None
 
         # gan
         self.gan = None
         self.fitted = False
+        self.noise_size = None
 
         # dataset parameters
         self.dataset_rows = None
@@ -43,13 +45,13 @@ class GANerAid():
 
         gan_trainer = GanTrainer(self.lr_d, self.lr_g)
 
-        rows = dataset.shape[0]
-        columns = dataset.shape[1]
-        noise_size = columns * self.noise_factor
-        self.gan = GANerAidGAN(noise_size, rows, columns, self.hidden_feature_space, self.device)
+        self.dataset_columns = dataset.shape[1]
+        self.dataset_rows = dataset.shape[0]
+        self.noise_size = self.dataset_columns * self.noise_factor
+        self.gan = GANerAidGAN(self.noise_size, self.nr_of_rows, self.dataset_columns, self.hidden_feature_space,
+                               self.device)
 
         gan_trainer.train(self.dataset, self.gan, epochs)
-
 
         self.fitted = True
 
@@ -63,8 +65,16 @@ class GANerAid():
         if not self.fitted:
             raise ValueError('Gan needs to be fitted by calling fit(dataset) before calling generate()')
         # todo: generate data
-        print("generate data")
-        return [x for x in range(0, sample_size)]
+        self.gan.eval()
+        generate = lambda: self.gan.generator(noise(1, self.noise_size)).view(self.nr_of_rows,
+                                                                              self.dataset_columns).cpu().detach()
+        sample = generate().numpy()
+        for i in range(int(sample_size / self.nr_of_rows) -1):
+            sample = np.append(sample,
+                               generate().numpy(),
+                               axis=0)
+
+        return self.processor.postprocess(sample)
 
     def evaluate(self):
         if not self.fitted:

@@ -1,4 +1,5 @@
 # containing preprocessing logic
+import pandas as pd
 
 from UtilityFunctions import get_binary_columns
 from sklearn.preprocessing import MinMaxScaler
@@ -10,6 +11,13 @@ def add_noise(value, binary_noise):
         return value + np.random.uniform(0, binary_noise)
     if value > 0:
         return value - np.random.uniform(0, binary_noise)
+
+
+def scale(x):
+    if x < 0:
+        return -1
+    else:
+        return 1
 
 
 class DataProcessor:
@@ -27,3 +35,15 @@ class DataProcessor:
         for i in self.binary_columns:
             scaled_data[:, i] = np.array([add_noise(x, binary_noise) for x in scaled_data[:, i]])
         return scaled_data
+
+    def postprocess(self, data):
+        # reverse binary
+        for i in self.binary_columns:
+            data[:, i] = np.array([scale(x) for x in data[:, i]])
+
+        # reverse min max scaling
+        data = pd.DataFrame(self.sc.inverse_transform(data))
+
+        data.columns = self.pandas_dataset.columns
+        data.astype(self.pandas_dataset.dtypes)
+        return data

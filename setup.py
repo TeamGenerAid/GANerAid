@@ -17,7 +17,8 @@ setup(
         'pandas>=1.2.4',
         'torch>=1.8.1',
         'scikit-learn>=0.22.2',
-        'seaborn>=0.11.1'
+        'seaborn>=0.11.1',
+        'tqdm>=4.61.1'
 
     ],
     python_requires='>=3.7',

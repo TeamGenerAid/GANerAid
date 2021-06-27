@@ -52,13 +52,14 @@ class GANerAidDiscriminator(torch.nn.Module):
 
 
 class GANerAidGenerator(nn.Module):
-    def __init__(self, noise, rows, columns, hidden_size, lstm_layers=1, leaky_relu=0.2, bidirectional=True):
+    def __init__(self, device, noise, rows, columns, hidden_size, lstm_layers=1, leaky_relu=0.2, bidirectional=True):
         super(GANerAidGenerator, self).__init__()
         self.rows = rows
         self.columns = columns
         self.lstm_layers = lstm_layers
         self.hidden_size = hidden_size
         self.input_size = int(noise / columns)
+        self.noise_size = noise
         self.directions = 2 if bidirectional else 1
         self.bidirectional = bidirectional
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, lstm_layers, batch_first=True,
@@ -69,10 +70,12 @@ class GANerAidGenerator(nn.Module):
             nn.Tanh()
         )
 
+        self.device = device
+
     def init_hidden(self, batch_size):
         # function to init the hidden layers
-        return (torch.randn(self.lstm_layers * self.directions, batch_size, self.hidden_size).cuda(),
-                torch.randn(self.lstm_layers * self.directions, batch_size, self.hidden_size).cuda())
+        return (torch.randn(self.lstm_layers * self.directions, batch_size, self.hidden_size).to(self.device),
+                torch.randn(self.lstm_layers * self.directions, batch_size, self.hidden_size).to(self.device))
 
         # create a forward pass function'
 
@@ -87,26 +90,27 @@ class GANerAidGenerator(nn.Module):
         step = int(self.hidden_size / self.rows)
         for i in range(0, self.hidden_size, step):
             r = torch.flatten(x[:, :, i:step + i], 1)
-            output[:, c, :] = self.out(r).cuda()
+            output[:, c, :] = self.out(r).to(self.device)
             c += 1
-        return output.cuda()
+        return output.to(self.device)
 
 
-class GANerAidGAN(nn.Module):
+class GANerAidGAN:
     def __init__(self, noise, rows, columns, hidden_size, device, lstm_layers=1, droput_d=0.3, leaky_relu_d=0.2,
                  leaky_relu_g=0.2, bidirectional=True):
         super(GANerAidGAN, self).__init__()
-        self.generator = GANerAidGenerator(noise, rows, columns, hidden_size, lstm_layers=1, leaky_relu=0.2,
+        self.device = device
+        self.generator = GANerAidGenerator(device, noise, rows, columns, hidden_size, lstm_layers=1, leaky_relu=0.2,
                                            bidirectional=True).to(device)
         self.discriminator = GANerAidDiscriminator(rows, columns, dropout=0.3, leaky_relu=0.2).to(device)
 
     def train(self):
         self.generator.train()
-        self.disriminator.train()
+        self.discriminator.train()
 
     def eval(self):
         self.generator.eval()
-        self.disriminator.eval()
+        self.discriminator.eval()
 
     def save(self, path):
         torch.save(self.generator, path + "_generator")

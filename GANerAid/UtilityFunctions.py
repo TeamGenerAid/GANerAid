@@ -2,10 +2,18 @@ import pandas as pd
 import seaborn as sns
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+from torch.autograd.variable import Variable
+import torch
 
 
 def set_or_default(key, default_value, args):
     return default_value if key not in args else args[key]
+
+def noise(batch_size, noise_size):
+    n = Variable(torch.randn(batch_size, noise_size))
+    if torch.cuda.is_available(): return n.cuda()
+    return n
+
 
 
 def read_CSV(path):
