@@ -13,10 +13,18 @@ if __name__ == '__main__':
     gan = GANerAid(device)
     gan.fit(data, epochs=5)
 
-    data = gan.generate(sample_size=100)
+    data = gan.generate(sample_size=3)
     print(data)
     print(data.shape)
 
     evaluation_report = gan.evaluate(data, data)
     evaluation_report.diff_corr_matrix()
+    gan.save("./test")
+    gan = GANerAid.load("./test", device)
+
+    gan.fit(data, epochs=3)
+    data = gan.generate(sample_size=100)
+
+
+
 

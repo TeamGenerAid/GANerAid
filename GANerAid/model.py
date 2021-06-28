@@ -96,10 +96,20 @@ class GANerAidGenerator(nn.Module):
 
 
 class GANerAidGAN:
-    def __init__(self, noise, rows, columns, hidden_size, device, lstm_layers=1, droput_d=0.3, leaky_relu_d=0.2,
+    def __init__(self, noise, rows, columns, hidden_size, device, lstm_layers=1, dropout_d=0.3, leaky_relu_d=0.2,
                  leaky_relu_g=0.2, bidirectional=True):
         super(GANerAidGAN, self).__init__()
         self.device = device
+        self.rows = rows
+        self.noise = noise
+        self.columns = columns
+        self.hidden_size = hidden_size
+        self.lstm_layers = lstm_layers
+        self.dropout_d = dropout_d
+        self.leaky_relu_d = leaky_relu_d
+        self.leaky_relu_g = leaky_relu_g
+        self.bidirectional = bidirectional
+
         self.generator = GANerAidGenerator(device, noise, rows, columns, hidden_size, lstm_layers=1, leaky_relu=0.2,
                                            bidirectional=True).to(device)
         self.discriminator = GANerAidDiscriminator(rows, columns, dropout=0.3, leaky_relu=0.2).to(device)
@@ -112,21 +122,37 @@ class GANerAidGAN:
         self.generator.eval()
         self.discriminator.eval()
 
-    def save(self, path):
-        torch.save(self.generator, path + "_generator")
-        torch.save(self.discriminator, path + "discriminator")
+    def get_params(self):
+        return {"generator": self.generator.state_dict(),
+                    "discriminator": self.discriminator.state_dict(),
+                    "rows": self.rows,
+                    "noise": self.noise,
+                    "columns": self.columns,
+                    "hidden_size": self.hidden_size,
+                    "lstm_layers": self.lstm_layers,
+                    "dropout_d": self.dropout_d,
+                    "leaky_relu_d": self.leaky_relu_d,
+                    "leaky_relu_g": self.leaky_relu_g,
+                    "bidirectional": self.bidirectional
+                    }
 
     @staticmethod
-    def load(self, path, device):
-        generator = torch.load(path + "_generator")
-        discriminator = torch.load(+ "discriminator")
-        return self(generator, discriminator)
+    def setup_from_params(params, device):
+        generator_params = (params['generator'])
+        discriminator_params = (params['discriminator'])
 
+        rows = params["rows"]
+        noise = params["noise"]
+        columns = params["columns"]
+        hidden_size = params["hidden_size"]
+        lstm_layers = params["lstm_layers"]
+        dropout_d = params["dropout_d"]
+        leaky_relu_d = params["leaky_relu_d"]
+        leaky_relu_g = params["leaky_relu_g"]
+        bidirectional = params["bidirectional"]
 
-
-
-
-
-
-
-
+        gan = GANerAidGAN(noise, rows, columns, hidden_size, device, lstm_layers, dropout_d, leaky_relu_d, leaky_relu_g,
+                          bidirectional)
+        gan.generator.load_state_dict(generator_params)
+        gan.discriminator.load_state_dict(discriminator_params)
+        return gan
