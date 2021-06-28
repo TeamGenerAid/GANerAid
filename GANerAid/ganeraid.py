@@ -37,11 +37,11 @@ class GANerAid:
 
         self.dataset = None
 
-    def fit(self, dataset, epochs=1000):
+    def fit(self, dataset, epochs=1000, use_aug=False):
         if not isinstance(dataset, pd.DataFrame):
             raise ValueError('Dataset is not of type Pandas Dataframe')
 
-        self.processor = DataProcessor(dataset)
+        self.processor = DataProcessor(dataset, use_aug)
         self.dataset = self.processor.preprocess(self.binary_noise)
 
         gan_trainer = GanTrainer(self.lr_d, self.lr_g)

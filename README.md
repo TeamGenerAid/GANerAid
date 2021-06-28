@@ -34,9 +34,22 @@ pip install GANerAid
 ## Provided fuctions and Usage
 ### Data Preprocessing 
 
+The library offers the possibility to use data augmentation. This feature doubles the data specified as input in order to have double the amount available for the GAN training process.
+To use it, simply set the use_aug parameter of the fit() method to true: 
 
+```
+gan.fit(data, epochs=5, use_aug=True)
+```
+
+By doing so, the GAN will be fitted to the original input data + augmented data with the same size as the original input data.
 
 ### Data Generation
+
+After fitting, the generate() method has to be called in order to generate synthetic data. 
+
+```
+data = gan.generate(sample_size=100)
+```
 
 ### Evaluation
 
