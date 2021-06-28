@@ -40,6 +40,14 @@ pip install GANerAid
 
 ### Evaluation
 
+### Parameters
+
+| Parameter        | Description           | Default Value  |
+| ------------- |:-------------:| -----:|
+| lr_d     | Learning rate of the generator | 5e-4|
+| lr_g     | Learning rate of the discriminator     |   5e-4 |
+| noise_factor | Noise factor defining how large the noise vector as input for the generator will be based on the nr of columns. E.g. 10 columns and a noise factor of 5 results in an input vector with the length of 50       |    5 |
+
 
 ## Dataset
 You can simply try it out using Kaggles [Breast cancer dataset](https://www.kaggle.com/merishnasuwal/breast-cancer-prediction-dataset) as input.
