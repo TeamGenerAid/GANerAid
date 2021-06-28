@@ -1,3 +1,3 @@
-import GANerAid.GANerAid
-import GANerAid.UtilityFunctions
-import GANerAid.DataProcessing
+import GANerAid.ganeraid
+import GANerAid.utils
+import GANerAid.data_preprocessor

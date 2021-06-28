@@ -1,9 +1,9 @@
 # main entry point
 import pandas as pd
 import numpy as np
-from UtilityFunctions import set_or_default, noise
-from DataProcessing import DataProcessor
-from GanTrainer import GanTrainer
+from utils import set_or_default, noise
+from data_preprocessor import DataProcessor
+from gan_trainer import GanTrainer
 
 from model import GANerAidGAN
 
