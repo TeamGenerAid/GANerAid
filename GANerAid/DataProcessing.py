@@ -34,6 +34,8 @@ class DataProcessor:
 
         for i in self.binary_columns:
             scaled_data[:, i] = np.array([add_noise(x, binary_noise) for x in scaled_data[:, i]])
+
+        # todo: do data augumentation by adding noise somewhere here
         return scaled_data
 
     def postprocess(self, data):

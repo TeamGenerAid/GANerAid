@@ -8,7 +8,7 @@ from GanTrainer import GanTrainer
 from model import GANerAidGAN
 
 
-class GANerAid():
+class GANerAid:
     def __init__(self, device, **kwargs):
         self.device = device
         # hyper parameters
@@ -76,8 +76,8 @@ class GANerAid():
 
         return self.processor.postprocess(sample)
 
-    def evaluate(self):
+    def evaluate(self, initial_data, generated_data):
         if not self.fitted:
             raise ValueError('Gan needs to be fitted by calling fit(dataset) before calling evaluate()')
         # todo: generate evaluation report
-        print("evaluate data")
+        print("you data is freaking awesome")
