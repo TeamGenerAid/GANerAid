@@ -4,6 +4,7 @@ import numpy as np
 from utils import set_or_default, noise
 from data_preprocessor import DataProcessor
 from gan_trainer import GanTrainer
+from evaluation_report import  EvaluationReport
 
 from model import GANerAidGAN
 
@@ -80,4 +81,5 @@ class GANerAid:
         if not self.fitted:
             raise ValueError('Gan needs to be fitted by calling fit(dataset) before calling evaluate()')
         # todo: generate evaluation report
-        print("you data is freaking awesome")
+
+        return EvaluationReport(initial_data, generated_data)
