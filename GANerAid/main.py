@@ -1,4 +1,4 @@
-from GANerAid import GANerAid
+from ganeraid import GANerAid
 import pandas as pd
 import torch
 
@@ -11,10 +11,12 @@ if __name__ == '__main__':
          "From_Western_Europe"], axis=1)
 
     gan = GANerAid(device)
-    gan.fit(data, epochs=20)
+    gan.fit(data, epochs=5)
 
     data = gan.generate(sample_size=100)
     print(data)
     print(data.shape)
 
-    gan.evaluate(data)
+    evaluation_report = gan.evaluate(data, data)
+    evaluation_report.diff_corr_matrix()
+
