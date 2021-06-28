@@ -64,5 +64,11 @@ class DataProcessor:
         data = pd.DataFrame(self.sc.inverse_transform(data))
 
         data.columns = self.pandas_dataset.columns
-        data.astype(self.pandas_dataset.dtypes)
+        
+        for column in data.columns:
+            if (self.pandas_dataset[column].dtype == "int64"):
+                data[column] = data[column].round(0)
+
+        data = data.astype(self.pandas_dataset.dtypes)
+
         return data
