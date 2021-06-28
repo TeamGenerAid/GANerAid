@@ -18,7 +18,9 @@ setup(
         'torch>=1.8.1',
         'scikit-learn>=0.22.2',
         'seaborn>=0.11.1',
-        'tqdm>=4.61.1'
+        'tqdm>=4.61.1',
+        'tab-gan-metrics >= 1.1.4'
+
 
     ],
     python_requires='>=3.7',
