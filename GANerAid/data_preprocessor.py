@@ -26,16 +26,33 @@ class DataProcessor:
         self.binary_columns = get_binary_columns(self.pandas_dataset)
         self.sc = None
 
-    def preprocess(self, binary_noise=0.2):
+    def preprocess(self, binary_noise=0.2, use_aug=False):
         np_data = self.pandas_dataset.to_numpy()
         self.sc = MinMaxScaler((-1, 1))
         self.sc = self.sc.fit(np_data)
         scaled_data = self.sc.fit_transform(np_data)
 
+
+        # ADD NOISE
+        if use_aug:
+            copied_data = scaled_data.copy()
+
+            for x in range(copied_data.shape[1]):
+                if x not in binary_columns:
+                    for y in range(copied_data.shape[0]):
+                        noise = np.random.uniform(-0.00001, .00001)
+                        if -1 <= (copied_data[y,x] + noise) <= 1:
+                            copied_data[y, x] = copied_data[y, x] + noise
+                        else:
+                            copied_data[y, x] = copied_data[y, x] - noise             
+
+            data2 = np.append(scaled_data, copied_data, axis=0)
+
+            scaled_data = data2
+
         for i in self.binary_columns:
             scaled_data[:, i] = np.array([add_noise(x, binary_noise) for x in scaled_data[:, i]])
 
-        # todo: do data augumentation by adding noise somewhere here
         return scaled_data
 
     def postprocess(self, data):
@@ -47,5 +64,11 @@ class DataProcessor:
         data = pd.DataFrame(self.sc.inverse_transform(data))
 
         data.columns = self.pandas_dataset.columns
-        data.astype(self.pandas_dataset.dtypes)
+        
+        for column in data.columns:
+            if (self.pandas_dataset[column].dtype == "int64"):
+                data[column] = data[column].round(0)
+
+        data = data.astype(self.pandas_dataset.dtypes)
+
         return data

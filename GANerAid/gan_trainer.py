@@ -31,54 +31,63 @@ class GanTrainer:
 
         self.verbose = verbose
 
-    def train(self, dataset, gan, epochs=100, batch_size=100):
+    def train_on_batch(self, gan, real_batch, d_optimizer, g_optimizer):
+        # 1. Train Discriminator
+        real_data = Variable(real_batch)
+        if torch.cuda.is_available(): real_data = real_data.cuda()
+        # Generate fake data
+        fake_data = gan.generator(noise(real_data.size(0), gan.generator.noise_size)).detach()
+        # Train D
+        # Reset gradients
+        d_optimizer.zero_grad()
+
+        # 1.1 Train on Real Data
+        prediction_real = gan.discriminator(real_data)
+        # Calculate error and backpropagate
+        error_real = self.loss(prediction_real, real_data_target(real_data.size(0)))
+        error_real.backward()
+
+        # 1.2 Train on Fake Data
+        prediction_fake = gan.discriminator(fake_data)
+        # Calculate error and backpropagate
+        error_fake = self.loss(prediction_fake, fake_data_target(real_data.size(0)))
+        error_fake.backward()
+
+        # 1.3 Update weights with gradients
+        d_optimizer.step()
+
+        # 2. Train Generator
+        # Generate fake data
+        fake_data = gan.generator(noise(real_batch.size(0), gan.generator.noise_size))
+        # Train G
+        # Reset gradients
+        g_optimizer.zero_grad()
+        # Sample noise and generate fake data
+        prediction = gan.discriminator(fake_data)
+        # Calculate error and backpropagate
+        g_error = self.loss(prediction, real_data_target(prediction.size(0)))
+        g_error.backward()
+        # Update weights with gradients
+        g_optimizer.step()
+        return error_real.item(), error_fake.item(), g_error.item()
+
+    def train(self, dataset, gan, epochs=100, batch_size=100, verbose=True):
         data_loader = torch.utils.data.DataLoader(RealData(dataset, rows=gan.generator.rows), batch_size=batch_size,
                                                   shuffle=True)
         d_optimizer = optim.Adam(gan.discriminator.parameters(), lr=self.lr_d, weight_decay=self.weight_decay_d)
         g_optimizer = optim.Adam(gan.generator.parameters(), lr=self.lr_g, weight_decay=self.weight_decay_g)
 
-        with trange(epochs) as tr:
-            for it in tr:
-                gan.train()
+        gan.train()
+        if verbose:
+            with trange(epochs) as tr:
+                for _ in tr:
+                    for n_batch, real_batch, in enumerate(data_loader):
+                        error_real, error_fake, g_error = self.train_on_batch(gan, real_batch, d_optimizer, g_optimizer)
+                        tr.set_postfix(loss="d error: {} --- g error {}".format(error_real + error_fake, g_error))
+        else:
+            for _ in range(epochs):
                 for n_batch, real_batch, in enumerate(data_loader):
-                    # 1. Train Discriminator
-                    real_data = Variable(real_batch)
-                    if torch.cuda.is_available(): real_data = real_data.cuda()
-                    # Generate fake data
-                    fake_data = gan.generator(noise(real_data.size(0), gan.generator.noise_size)).detach()
-                    # Train D
-                    # Reset gradients
-                    d_optimizer.zero_grad()
-
-                    # 1.1 Train on Real Data
-                    prediction_real = gan.discriminator(real_data)
-                    # Calculate error and backpropagate
-                    error_real = self.loss(prediction_real, real_data_target(real_data.size(0)))
-                    error_real.backward()
-
-                    # 1.2 Train on Fake Data
-                    prediction_fake = gan.discriminator(fake_data)
-                    # Calculate error and backpropagate
-                    error_fake = self.loss(prediction_fake, fake_data_target(real_data.size(0)))
-                    error_fake.backward()
-
-                    # 1.3 Update weights with gradients
-                    d_optimizer.step()
-
-                    # 2. Train Generator
-                    # Generate fake data
-                    fake_data = gan.generator(noise(real_batch.size(0), gan.generator.noise_size))
-                    # Train G
-                    # Reset gradients
-                    g_optimizer.zero_grad()
-                    # Sample noise and generate fake data
-                    prediction = gan.discriminator(fake_data)
-                    # Calculate error and backpropagate
-                    g_error = self.loss(prediction, real_data_target(prediction.size(0)))
-                    g_error.backward()
-                    # Update weights with gradients
-                    g_optimizer.step()
-                    tr.set_postfix(loss="d error: {} --- g error {}".format(error_real + error_fake, g_error))
+                    self.train_on_batch(gan, real_batch, d_optimizer, g_optimizer)
 
 
 class RealData(Dataset):
@@ -95,7 +104,7 @@ class RealData(Dataset):
             rnd = np.random.randint(low=0, high=len(self.indices))
             idx = self.indices.pop(rnd)
             output[i] = self.dataset[idx]
-        #reset indices
+        # reset indices
         if len(self.indices) == 0:
             self.indices = [x for x in range(self.dataset.shape[0])]
         return output
