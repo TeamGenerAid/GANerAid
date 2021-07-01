@@ -33,15 +33,18 @@ class EvaluationReport():
         print('\n')
         print("CORRELATION METRICS")
         print("----------------------------")
-        euclidean_dist = np.linalg.norm(self.original_data.corr().abs(), self.generated_data.corr().abs())
-        print("Euclidean Distance {}", format(str(euclidean_dist)))
+        euclidean_dist = np.linalg.norm(self.original_data.corr().abs() - self.generated_data.corr().abs())
+        print("Euclidean Distance {}".format(str(euclidean_dist)))
 
-        for column in self.original_data.columns:
-            original_values = self.original_data[column]
-            generated_values = self.generated_data[column]
-            rmse = mean_squared_error(original_values, generated_values, squared = False)
-            print("Root Mean Square Error (RMSE) for Column {}: {}", format(str(column), (str(rmse))))
-
+        
+        try:
+            for column in self.original_data.columns:
+                original_values = self.original_data[column]
+                generated_values = self.generated_data[column]
+                rmse = mean_squared_error(original_values, generated_values, squared = False)
+                print("Root Mean Square Error (RMSE) for Column {}: {}".format(str(column), (str(rmse))))
+        except:
+            print("The RMSE can only be calculated when the datasets ave the same size.")
     def get_duplicates(self):
         print('\n')
         print("DUPLICATES")
