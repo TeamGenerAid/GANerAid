@@ -1,4 +1,5 @@
 from ganeraid import GANerAid
+from experiment_generator import ExperimentGenerator
 import pandas as pd
 import torch
 
@@ -20,6 +21,11 @@ if __name__ == '__main__':
     evaluation_report = gan.evaluate(data, data_gen)
     evaluation_report.get_duplicates()
     evaluation_report.get_KL_divergence()
+
+    parameters = [{'lr_d': 5e-4, 'epochs': 500, 'sample_size': 5},
+                  {'lr_d': 5e-9, 'epochs': 500, 'sample_size': 5}]
+
+    generator = ExperimentGenerator(device, data, parameters)
 
 
 
