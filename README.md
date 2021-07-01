@@ -37,7 +37,12 @@ pip install GANerAid
 ## Provided fuctions and Usage
 ### Data Preprocessing 
 
-Internally the library is preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragrahp is also handled here.
+For the dataset to be passed to the library, the following must be ensured:
+- Binary variables must be converted to 0 and 1
+- The dataset must be passed in a pandas dataframe
+- Categorical variables should be avoided and therefore removed
+
+Internally the library is then further preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragrahp is also handled here.
 
 ### Parameters
 
@@ -83,6 +88,7 @@ data = gan.generate(sample_size=100)
 ### Evaluation
 
 Some evaluation functions are provided in the library. Hence, it can be decided whether the GAN generated satisfactory data.
+For this purpose, approximately the same number of data to be evaluated should be generated as the data set originally passed to the library.
 
 To be able to use the fuctions of the valuation just use the method:
 ```
