@@ -6,6 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 from tqdm import trange
 from GANerAid.utils import noise
+import math
 
 
 def real_data_target(batch_size):
@@ -96,7 +97,7 @@ class RealData(Dataset):
         self.rows = rows
         self.dataset = dataset
         self.indices = [x for x in range(dataset.shape[0])]
-        self.len = int(self.dataset.shape[0] / self.rows)
+        self.len = math.floor(self.dataset.shape[0] / self.rows)
 
     def sample_real_data(self, n):
         # reset indices

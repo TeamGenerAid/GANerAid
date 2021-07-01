@@ -38,7 +38,7 @@ class DataProcessor:
             copied_data = scaled_data.copy()
 
             for x in range(copied_data.shape[1]):
-                if x not in binary_columns:
+                if x not in self.binary_columns:
                     for y in range(copied_data.shape[0]):
                         noise = np.random.uniform(-0.00001, .00001)
                         if -1 <= (copied_data[y,x] + noise) <= 1:
