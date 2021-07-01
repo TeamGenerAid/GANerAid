@@ -18,6 +18,8 @@ The following libraries are needed and asould be installed in advance:
 - torch>=1.8.1
 - scikit-learn>=0.22.2
 - seaborn>=0.11.1
+- tqdm>=4.61.1
+- tab-gan-metrics >= 1.1.4
 
 Or simply running the `setup.py` file:
 
