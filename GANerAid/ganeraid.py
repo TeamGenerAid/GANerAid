@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import torch
+import math
 
 from GANerAid.utils import set_or_default, noise
 from GANerAid.data_preprocessor import DataProcessor
@@ -71,12 +72,12 @@ class GANerAid:
         generate = lambda: self.gan.generator(noise(1, self.noise_size)).view(self.nr_of_rows,
                                                                               self.dataset_columns).cpu().detach()
         sample = generate().numpy()
-        for i in range(int(sample_size / self.nr_of_rows) - 1):
+        for i in range(math.ceil(sample_size / self.nr_of_rows) - 1):
             sample = np.append(sample,
                                generate().numpy(),
                                axis=0)
 
-        return self.processor.postprocess(sample)
+        return self.processor.postprocess(sample[:sample_size])
 
     def evaluate(self, initial_data, generated_data):
         if not self.fitted:
