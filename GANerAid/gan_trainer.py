@@ -5,7 +5,7 @@ from torch.autograd.variable import Variable
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 from tqdm import trange
-from utils import noise
+from GANerAid.utils import noise
 
 
 def real_data_target(batch_size):

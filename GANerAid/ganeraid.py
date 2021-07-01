@@ -3,13 +3,13 @@ import pandas as pd
 import numpy as np
 import torch
 
-from utils import set_or_default, noise
-from data_preprocessor import DataProcessor
-from gan_trainer import GanTrainer
-from evaluation_report import EvaluationReport
+from GANerAid.utils import set_or_default, noise
+from GANerAid.data_preprocessor import DataProcessor
+from GANerAid.gan_trainer import GanTrainer
+from GANerAid.evaluation_report import EvaluationReport
 from pathlib import Path
 
-from model import GANerAidGAN
+from GANerAid.model import GANerAidGAN
 
 
 class GANerAid:
