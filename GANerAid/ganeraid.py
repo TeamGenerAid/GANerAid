@@ -46,8 +46,8 @@ class GANerAid:
             raise ValueError('Dataset is not of type Pandas Dataframe')
 
         if not self.fitted:
-            self.processor = DataProcessor(dataset, use_aug)
-            self.dataset = self.processor.preprocess(self.binary_noise)
+            self.processor = DataProcessor(dataset)
+            self.dataset = self.processor.preprocess(self.binary_noise, use_aug=use_aug)
 
             self.gan_trainer = GanTrainer(self.lr_d, self.lr_g)
 
@@ -57,7 +57,7 @@ class GANerAid:
         self.gan = GANerAidGAN(self.noise_size, self.nr_of_rows, self.dataset_columns, self.hidden_feature_space,
                                self.device)
 
-        self.gan_trainer.train(self.dataset, self.gan, epochs)
+        self.gan_trainer.train(self.dataset, self.gan, epochs, verbose=verbose)
 
         self.fitted = True
 
@@ -85,7 +85,7 @@ class GANerAid:
 
     def save(self, path, name="GANerAid"):
         if not self.fitted:
-            raise ValueError('Gan needs to be fitted by calling fit(dataset) before beeing able to save the gan')
+            raise ValueError('Gan needs to be fitted by calling fit(dataset) before being able to save the gan')
         Path(path).mkdir(parents=True, exist_ok=False)
         gan_params = self.gan.get_params()
         torch.save({
