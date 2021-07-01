@@ -13,15 +13,6 @@ def noise(batch_size, noise_size):
     return n
 
 
-def get_binary_columns(data):
-    binary_columns = []
-    i = 0
-    for column in data:
-        if len(data[column].unique()) == 2:
-            binary_columns.append(i)
-        i = i + 1
-    return binary_columns
-
 
 def add_noise(x, noise_factor):
     if x < 0:

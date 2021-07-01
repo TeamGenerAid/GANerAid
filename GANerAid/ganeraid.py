@@ -11,6 +11,9 @@ from GANerAid.evaluation_report import EvaluationReport
 from pathlib import Path
 
 from GANerAid.model import GANerAidGAN
+from GANerAid.logger import Logger
+
+import logging
 
 
 class GANerAid:
@@ -26,6 +29,8 @@ class GANerAid:
         self.nr_of_rows = set_or_default("nr_of_rows", 25, kwargs)
         self.binary_noise = set_or_default("binary_noise", 0.2, kwargs)
 
+        self.logger = Logger(active=set_or_default("logging_activated", True, kwargs))
+
         # data processing
         self.processor = None
 
@@ -38,19 +43,35 @@ class GANerAid:
         # dataset parameters
         self.dataset_rows = None
         self.dataset_columns = None
-        self.binary_columns = None
 
         self.dataset = None
 
-    def fit(self, dataset, epochs=1000, verbose=True, use_aug=False):
+        self.logger.print("Initialized gan with the following parameters: \n"
+                          "lr_d = {}\n"
+                          "lr_g = {}\n"
+                          "hidden_feature_space = {}\n"
+                          "batch_size = {}\n"
+                          "nr_of_rows = {}\n"
+                          "binary_noise = {}",
+                          self.lr_d,
+                          self.lr_g,
+                          self.hidden_feature_space,
+                          self.batch_size,
+                          self.nr_of_rows,
+                          self.binary_noise)
+
+    def fit(self, dataset, epochs=1000, verbose=True, aug_factor=0):
         if not isinstance(dataset, pd.DataFrame):
             raise ValueError('Dataset is not of type Pandas Dataframe')
 
         if not self.fitted:
             self.processor = DataProcessor(dataset)
-            self.dataset = self.processor.preprocess(self.binary_noise, use_aug=use_aug)
+            self.dataset = self.processor.preprocess(self.binary_noise, aug_factor=aug_factor)
 
             self.gan_trainer = GanTrainer(self.lr_d, self.lr_g)
+            self.logger.print("Start training of gan for {} epochs", epochs)
+        else:
+            self.logger.print("Continue training of gan for {} epochs", epochs)
 
         self.dataset_columns = dataset.shape[1]
         self.dataset_rows = dataset.shape[0]
@@ -65,6 +86,8 @@ class GANerAid:
         return history
 
     def generate(self, sample_size=1000):
+        self.logger.print("Generating {} samples", sample_size)
+
         if not self.fitted:
             raise ValueError('Gan needs to be fitted by calling fit(dataset) before calling generate()')
         # todo: generate data
@@ -95,6 +118,7 @@ class GANerAid:
             "gan_params": gan_params,
             "kwargs": self.kwargs
         }, path + "/" + name + ".gan")
+        self.logger.print("Gan successfully saved under the path {} and the name {}", path, name)
 
     @staticmethod
     def load(path, device, name="GANerAid"):
@@ -102,5 +126,3 @@ class GANerAid:
         gan = GANerAid(device, **restored["kwargs"])
         gan.gan = GANerAidGAN.setup_from_params(restored["gan_params"], device)
         return gan
-
-

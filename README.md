@@ -63,11 +63,13 @@ gan = GANerAid(device, lr_d=0.000005, lr_g=0.000005)
 
 ### Data Augmentation
 
-The library offers the possibility to use data augmentation. This feature doubles the data specified as input in order to have double the amount available for the GAN training process.
-To use it, simply set the use_aug parameter of the fit() method to true: 
+The library offers the possibility to use data augmentation. This feature increases the data size based on a given parameter specified as input in order to have more data available for the GAN training process.
+To use it, simply set the aug_factor parameter of the fit() method to a value > 0. <br>
+This will increase the data based on the following formula data_size = original_data_size + (original_data_size * aug_factor) <br>
+E.g an aug_factor of 1 will double the value. 
 
 ```
-gan.fit(data, epochs=5, use_aug=True)
+gan.fit(data, epochs=5, aug_factor=1)
 ```
 
 By doing so, the GAN will be fitted to the original input data + augmented data with the same size as the original input data.

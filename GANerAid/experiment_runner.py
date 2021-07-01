@@ -2,21 +2,23 @@ from pathlib import Path
 
 from GANerAid.ganeraid import GANerAid
 from GANerAid.utils import set_or_default
+from GANerAid.logger import Logger
 
 
-class ExperimentGenerator:
-    def __init__(self, device, dataset, experiment_parameters):
+class ExperimentRunner:
+    def __init__(self, device, dataset, experiment_parameters, logging_activated=True):
         self.device = device
         self.experiment_parameters = experiment_parameters
         self.dataset = dataset
+        self.logger = Logger(logging_activated)
 
     def execute_experiment(self, verbose=True, save_models=False, save_path="experiment"):
         evaluation_results = []
         if save_models:
             Path(save_path).mkdir(parents=True, exist_ok=True)
         for experiment in self.experiment_parameters:
-            print("Run experiment {}".format(experiment))
-            gan = GANerAid(self.device, **experiment)
+            self.logger.print("Running experiment {}", experiment)
+            gan = GANerAid(self.device, **experiment, logging_activated=self.logger.active)
             gan.fit(self.dataset, epochs=set_or_default('epochs', 1000, experiment), verbose=verbose)
             data_gen = gan.generate(sample_size=experiment['sample_size'])
             result = gan.evaluate(self.dataset, data_gen)
