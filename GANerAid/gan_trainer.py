@@ -99,14 +99,14 @@ class RealData(Dataset):
         self.len = int(self.dataset.shape[0] / self.rows)
 
     def sample_real_data(self, n):
+        # reset indices
+        if len(self.indices) == 0:
+            self.indices = [x for x in range(self.dataset.shape[0])]
         output = np.empty([n, self.dataset.shape[1]])
         for i in range(n):
             rnd = np.random.randint(low=0, high=len(self.indices))
             idx = self.indices.pop(rnd)
             output[i] = self.dataset[idx]
-        # reset indices
-        if len(self.indices) == 0:
-            self.indices = [x for x in range(self.dataset.shape[0])]
         return output
 
     def __len__(self):
