@@ -19,7 +19,8 @@ setup(
         'scikit-learn>=0.22.2',
         'seaborn>=0.11.1',
         'tqdm>=4.61.1',
-        'tab-gan-metrics >= 1.1.4'
+        'tab-gan-metrics >= 1.1.4',
+        'matplotlib>=3.4.0'
 
 
     ],
