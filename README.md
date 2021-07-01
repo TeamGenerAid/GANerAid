@@ -12,7 +12,7 @@ The libray consist of (3) four diffenrent areas:
 
 
 ## Installation
-The following libraries are needed and asould be installed in advance: 
+The following libraries are needed: 
 - numpy>=1.19.5
 - pandas>=1.2.4
 - torch>=1.8.1
@@ -20,6 +20,7 @@ The following libraries are needed and asould be installed in advance:
 - seaborn>=0.11.1
 - tqdm>=4.61.1
 - tab-gan-metrics >= 1.1.4
+- matplotlib>=3.4.0
 
 Or simply running the `setup.py` file:
 
@@ -36,6 +37,27 @@ pip install GANerAid
 ## Provided fuctions and Usage
 ### Data Preprocessing 
 
+Internally the library is preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragrahp is also handled here.
+
+### Parameters
+
+The hyper parameters, such as learning rate, can be set in the constructor call of the GanerAid class.
+```
+gan = GANerAid(device, lr_d=0.000005, lr_g=0.000005)
+```
+
+| Parameter        | Description           | Default Value  |
+| ------------- |-------------| -----|
+| lr_d     | Learning rate of the generator | 5e-4|
+| lr_g     | Learning rate of the discriminator     |   5e-4 |
+| noise_factor | Noise factor defining how large the noise vector as input for the generator will be based on the nr of columns. E.g. 10 columns and a noise factor of 5 results in an input vector with the length of 50       |    5 |
+| hidden_feature_space | The feature space of the LSTm Cells| 200|
+| batch_size | The batch size defines the number of samples that will be propagated through the network. | 100 |
+| batch_size | The batch size of how many rows the generator generates at once. A lower number will make the correlation better. A higher number will reproduce the distributions of the colujmsn better. | 25 |
+| binary_noise | The upper limit of the uniformly distributed noise that will be added to binary columns in the preprocessing. | 0.2 |
+
+### Data Augmentation
+
 The library offers the possibility to use data augmentation. This feature doubles the data specified as input in order to have double the amount available for the GAN training process.
 To use it, simply set the use_aug parameter of the fit() method to true: 
 
@@ -45,9 +67,14 @@ gan.fit(data, epochs=5, use_aug=True)
 
 By doing so, the GAN will be fitted to the original input data + augmented data with the same size as the original input data.
 
+### Data Postprocessing
+
+After the GAN has generated data it needs to be postprocessed. This is done internally analogous to the preprocessing. The preprocessing steps are reversed, i.e. the values of the binary columns are set to -1 or 1 according to the interpretation of the noisy values. Afterwards the complete dataset gets scaled back to its original range. For Integer columns the values are being rounded afterwards. 
+
+
 ### Data Generation
 
-After fitting, the generate() method has to be called in order to generate synthetic data. 
+After fitting, the generate() method has to be called in order to generate synthetic data. The returned data is already postprocessed.
 
 ```
 data = gan.generate(sample_size=100)
@@ -55,13 +82,38 @@ data = gan.generate(sample_size=100)
 
 ### Evaluation
 
-### Parameters
+Some evaluation functions are provided in the library. Hence, it can be decided whether the GAN generated satisfactory data.
 
-| Parameter        | Description           | Default Value  |
-| ------------- |-------------| -----|
-| lr_d     | Learning rate of the generator | 5e-4|
-| lr_g     | Learning rate of the discriminator     |   5e-4 |
-| noise_factor | Noise factor defining how large the noise vector as input for the generator will be based on the nr of columns. E.g. 10 columns and a noise factor of 5 results in an input vector with the length of 50       |    5 |
+To be able to use the fuctions of the valuation just use the method:
+```
+evaluation_report = gan.evaluate(data, data_gen)
+```
+where data is the original data and data_gen is the generated data.
+#### plot_evaluation_metrics
+This method uses the [table_evaluator library](https://github.com/topics/table-evaluator) to provide plots of the ditributions, as well as the correlation of the two datasets.
+```
+evaluation_report.plot_evaluation_metrics()
+```
+
+#### plot_correlation
+This method plots the correlation matrices of the original data and the generated data.
+```
+evaluation_report.plot_correlation()
+```
+The optional parameters size_x and size_y can be can be used to adjust the size of the plots.
+
+#### get_correlation_metrics
+This method prints the euclidean distance of the correlation matrices. The RMSE for each value is prited as well. 
+```
+evaluation_report.get_correlation_metrics()
+```
+#### get_duplicates
+Thie method prints the number of duplicate rows in the real dataset, the generated dataset and in both datasets.
+```
+evaluation_report.get_duplicates()
+```
+#### get_KL_divergence
+This method prints the Kullback-Leibler divergence, which is a metric of how similar two ditributions are. The method will compare the two datsets column-wise. Lower values mean more similar distributions. More to Kullback-Leibler divergence can be found [here](https://towardsdatascience.com/kl-divergence-python-example-b87069e4b810)
 
 
 ## Dataset
@@ -69,4 +121,4 @@ You can simply try it out using Kaggles [Breast cancer dataset](https://www.kagg
 
 
 ## License
-All code is under MIT license, except the following. 
+All code is under MIT license. 
