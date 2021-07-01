@@ -78,17 +78,39 @@ class GanTrainer:
         d_optimizer = optim.Adam(gan.discriminator.parameters(), lr=self.lr_d, weight_decay=self.weight_decay_d)
         g_optimizer = optim.Adam(gan.generator.parameters(), lr=self.lr_g, weight_decay=self.weight_decay_g)
 
+        history = {
+            "g_loss": [],
+            "d_loss": []
+        }
+
         gan.train()
         if verbose:
             with trange(epochs) as tr:
                 for _ in tr:
+                    g_error_sum = 0
+                    d_error_sum = 0
+                    n_batches = len(data_loader)
                     for n_batch, real_batch, in enumerate(data_loader):
                         error_real, error_fake, g_error = self.train_on_batch(gan, real_batch, d_optimizer, g_optimizer)
                         tr.set_postfix(loss="d error: {} --- g error {}".format(error_real + error_fake, g_error))
+                        d_error_sum = error_real + error_fake
+                        g_error_sum = g_error
+                    history["g_loss"].append(g_error_sum / n_batches)
+                    history["d_loss"].append(d_error_sum / n_batches)
         else:
             for _ in range(epochs):
+                g_error_sum = 0
+                d_error_sum = 0
+                n_batches = len(data_loader)
                 for n_batch, real_batch, in enumerate(data_loader):
-                    self.train_on_batch(gan, real_batch, d_optimizer, g_optimizer)
+                    error_real, error_fake, g_error = self.train_on_batch(gan, real_batch, d_optimizer, g_optimizer)
+                    d_error_sum = error_real + error_fake
+                    g_error_sum = g_error
+                history["g_loss"].append(g_error_sum / n_batches)
+                history["d_loss"].append(d_error_sum / n_batches)
+
+        return history
+
 
 
 class RealData(Dataset):
