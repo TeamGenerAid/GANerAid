@@ -84,6 +84,19 @@ After fitting, the generate() method has to be called in order to generate synth
 ```
 data = gan.generate(sample_size=100)
 ```
+### Parameter optimisation
+
+The library offers the possibility to define several parameter combinations and to run them one after the other. At the end, these are returned with the corresponding evaluation results and can be analyzed.
+
+For this, the parameter combinations must be defined in Python dictionaries and passed to the library function in a list at the end:
+```
+parameters = [{'lr_d': 5e-4, 'epochs': 500, 'sample_size': 5},
+              {'lr_d': 5e-9, 'epochs': 500, 'sample_size': 5}]
+
+generator = ExperimentGenerator(device, data, parameters)
+```
+
+Valid parameters which can be specified in the dictionaries are the ones listed above in the 'Parameters' section.
 
 ### Evaluation
 
