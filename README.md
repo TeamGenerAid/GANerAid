@@ -90,10 +90,16 @@ The library offers the possibility to define several parameter combinations and 
 
 For this, the parameter combinations must be defined in Python dictionaries and passed to the library function in a list at the end:
 ```
+#define parameters
 parameters = [{'lr_d': 5e-4, 'epochs': 500, 'sample_size': 5},
               {'lr_d': 5e-9, 'epochs': 500, 'sample_size': 5}]
 
+#create exepriment runner instance
 generator = ExperimentGenerator(device, data, parameters)
+
+#execute experiments and save trained models
+generator.execute_experiment(save_models=True, save_path="experiment")
+
 ```
 
 Valid parameters which can be specified in the dictionaries are the ones listed above in the 'Parameters' section.
