@@ -73,8 +73,7 @@ class GanTrainer:
         return error_real.item(), error_fake.item(), g_error.item()
 
     def train(self, dataset, gan, epochs=100, batch_size=100, verbose=True):
-        data_loader = torch.utils.data.DataLoader(RealData(dataset, rows=gan.generator.rows), batch_size=batch_size,
-                                                  shuffle=True)
+        data_loader = DataLoader(RealData(dataset, rows=gan.generator.rows), batch_size=batch_size, shuffle=True)
         d_optimizer = optim.Adam(gan.discriminator.parameters(), lr=self.lr_d, weight_decay=self.weight_decay_d)
         g_optimizer = optim.Adam(gan.generator.parameters(), lr=self.lr_g, weight_decay=self.weight_decay_g)
 
@@ -110,7 +109,6 @@ class GanTrainer:
                 history["d_loss"].append(d_error_sum / n_batches)
 
         return history
-
 
 
 class RealData(Dataset):

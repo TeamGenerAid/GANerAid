@@ -2,6 +2,7 @@
 import pandas as pd
 import torch
 
+from GANerAid.experiment_generator import ExperimentGenerator
 from GANerAid.ganeraid import  GANerAid
 
 if __name__ == '__main__':
@@ -11,16 +12,8 @@ if __name__ == '__main__':
         ["id", "Unnamed: 32", "diagnosis"], axis=1)
 
 
-    gan = GANerAid(device)
+    parameters = [{'lr_d': 5e-4, 'epochs': 20, 'sample_size': 5},
+                  {'lr_d': 5e-9, 'epochs': 20, 'sample_size': 5}]
 
-    gan.fit(data, epochs=100)
-
-    gen_data = gan.generate(500)
-
-    report = gan.evaluate(data, gen_data)
-
-    report.plot_evaluation_metrics()
-
-
-    print(data)
-
+    generator = ExperimentGenerator(device, data, parameters)
+    generator.execute_experiment(save_models=True, save_path="experiment")
