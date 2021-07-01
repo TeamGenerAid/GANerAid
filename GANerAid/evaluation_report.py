@@ -57,8 +57,11 @@ class EvaluationReport():
         print('\n')
         print("KULLBACK-LEIBLER DIVERGENCE")
         print("----------------------------")
-        for column in self.original_data.columns:
-            original_values = self.original_data[column].to_numpy()
-            generated_values = self.generated_data[column].to_numpy()
-            kl_div = np.sum(np.where(original_values != 0, original_values * np.log(original_values/generated_values), 0))
-            print("{} : {}".format(column, kl_div))
+        try:
+            for column in self.original_data.columns:
+                original_values = self.original_data[column].to_numpy()
+                generated_values = self.generated_data[column].to_numpy()
+                kl_div = np.sum(np.where(original_values != 0, original_values * np.log(original_values/generated_values), 0))
+                print("{} : {}".format(column, kl_div))
+        except:
+            print("The clalculation of the Kullback Leibler divergence can only be done if the datasets have th same size.")
