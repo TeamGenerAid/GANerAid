@@ -1,9 +1,6 @@
 import pandas as pd
-import seaborn as sns
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
-from torch.autograd.variable import Variable
 import torch
+from torch.autograd.variable import Variable
 
 
 def set_or_default(key, default_value, args):
