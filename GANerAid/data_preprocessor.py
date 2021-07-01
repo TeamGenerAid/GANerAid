@@ -1,7 +1,7 @@
 # containing preprocessing logic
 import pandas as pd
 
-from utils import get_binary_columns
+from GANerAid.utils import get_binary_columns
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 
