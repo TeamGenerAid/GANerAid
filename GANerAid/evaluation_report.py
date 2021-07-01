@@ -1,6 +1,6 @@
 import numpy as np
 import seaborn as sns
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 from tab_gan_metrics import TableEvaluator
 import warnings
@@ -21,14 +21,20 @@ class EvaluationReport:
         table_evaluator = TableEvaluator(self.original_data, self.generated_data)
         table_evaluator.visual_evaluation()
 
-    def plot_correlation(self, size_x=40, size_y=15):
-        plt.figure(figsize=(size_x, size_y))
-        plt.subplot(1, 2, 1)
-        sns.heatmap(self.original_data.corr(), cmap="YlGnBu")
-        plt.title("Real Data Correlation Matrix")
-        plt.subplot(1, 2, 2)
+    def plot_correlation(self, size_x=60, size_y=120):
+        self.plot_original_correlation()
+        self.plot_generated_correlation()
+
+    def plot_generated_correlation(self, size_x=60, size_y=120):
+        plt.Figure(figsize=(size_x, size_y))
         sns.heatmap(self.generated_data.corr(), cmap="YlGnBu")
         plt.title("Generated Data Correlation Matrix")
+        plt.show()
+
+    def plot_original_correlation(self, size_x=60, size_y=120):
+        plt.Figure(figsize=(size_x, size_y))
+        sns.heatmap(self.original_data.corr(), cmap="YlGnBu")
+        plt.title("Real Data Correlation Matrix")
         plt.show()
 
     def get_correlation_metrics(self):
