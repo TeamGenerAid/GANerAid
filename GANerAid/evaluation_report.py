@@ -13,6 +13,7 @@ class EvaluationReport():
         self.generated_data = generated_data
 
     def plot_evaluation_metrics(self):
+        print('\n')
         print("EVALUATION REPORT")
         print("----------------------------")
         table_evaluator = TableEvaluator(self.original_data, self.generated_data)
@@ -29,6 +30,7 @@ class EvaluationReport():
         plt.show()
 
     def get_correlation_metrics(self):
+        print('\n')
         print("CORRELATION METRICS")
         print("----------------------------")
         euclidean_dist = np.linalg.norm(self.original_data.corr().abs(), self.generated_data.corr().abs())
@@ -41,6 +43,7 @@ class EvaluationReport():
             print("Root Mean Square Error (RMSE) for Column {}: {}", format(str(column), (str(rmse))))
 
     def get_duplicates(self):
+        print('\n')
         print("DUPLICATES")
         print("----------------------------")
         print("Real dataset contains {} duplicated rows", format(str(self.original_data.duplicated().sum())))
@@ -48,6 +51,7 @@ class EvaluationReport():
         print("Real and generated dataset contain {} duplicated rows",format(str(pd.concat([self.original_data, self.generated_data]).duplicated().sum())))
 
     def get_KL_divergence(self):
+        print('\n')
         print("KULLBACK-LEIBLER DIVERGENCE")
         print("----------------------------")
         for column in self.original_data.columns:
