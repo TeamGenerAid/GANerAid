@@ -57,9 +57,11 @@ class GANerAid:
         self.gan = GANerAidGAN(self.noise_size, self.nr_of_rows, self.dataset_columns, self.hidden_feature_space,
                                self.device)
 
-        self.gan_trainer.train(self.dataset, self.gan, epochs, verbose=verbose)
+        history = self.gan_trainer.train(self.dataset, self.gan, epochs, verbose=verbose)
 
         self.fitted = True
+
+        return history
 
     def generate(self, sample_size=1000):
         if not self.fitted:
