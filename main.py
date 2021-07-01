@@ -1,4 +1,4 @@
-from ganeraid import GANerAid
+import GANerAid
 import pandas as pd
 import torch
 
