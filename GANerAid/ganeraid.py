@@ -88,7 +88,7 @@ class GANerAid:
     def save(self, path, name="GANerAid"):
         if not self.fitted:
             raise ValueError('Gan needs to be fitted by calling fit(dataset) before being able to save the gan')
-        Path(path).mkdir(parents=True, exist_ok=False)
+        Path(path).mkdir(parents=True, exist_ok=True)
         gan_params = self.gan.get_params()
         torch.save({
             "gan_params": gan_params,
