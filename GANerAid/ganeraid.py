@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import torch
 import math
+import matplotlib.pyplot as plt
 
 from GANerAid.utils import set_or_default, noise
 from GANerAid.data_preprocessor import DataProcessor
@@ -90,7 +91,6 @@ class GANerAid:
 
         if not self.fitted:
             raise ValueError('Gan needs to be fitted by calling fit(dataset) before calling generate()')
-        # todo: generate data
         self.gan.eval()
         generate = lambda: self.gan.generator(noise(1, self.noise_size)).view(self.nr_of_rows,
                                                                               self.dataset_columns).cpu().detach()
@@ -105,8 +105,6 @@ class GANerAid:
     def evaluate(self, initial_data, generated_data):
         if not self.fitted:
             raise ValueError('Gan needs to be fitted by calling fit(dataset) before calling evaluate()')
-        # todo: generate evaluation report
-
         return EvaluationReport(initial_data, generated_data)
 
     def save(self, path, name="GANerAid"):
@@ -120,8 +118,15 @@ class GANerAid:
         }, path + "/" + name + ".gan")
         self.logger.print("Gan successfully saved under the path {} and the name {}", path, name)
 
+    def plot_history(self, history):
+        plt.plot(list(zip(history["d_loss"], history["g_loss"])))
+        plt.ylabel('Value')
+        plt.title('Discriminator and Generator Loss')
+        plt.grid(True)
+        plt.show()
+
     @staticmethod
-    def load(path, device, name="GANerAid"):
+    def load(device, path, name="GANerAid"):
         restored = torch.load(path + "/" + name + ".gan")
         gan = GANerAid(device, **restored["kwargs"])
         gan.gan = GANerAidGAN.setup_from_params(restored["gan_params"], device)
