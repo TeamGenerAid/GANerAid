@@ -91,6 +91,7 @@ data = gan.generate(sample_size=100)
 ### Parameter optimisation
 
 The library offers the possibility to define several parameter combinations and to run them one after the other. At the end, these are returned with the corresponding evaluation results and can be analyzed.
+If desired, the models trained during the experiments can be stored additionally.
 
 For this, the parameter combinations must be defined in Python dictionaries and passed to the library function in a list at the end:
 ```
@@ -99,10 +100,10 @@ parameters = [{'lr_d': 5e-4, 'epochs': 500, 'sample_size': 5},
               {'lr_d': 5e-9, 'epochs': 500, 'sample_size': 5}]
 
 #create exepriment runner instance
-generator = ExperimentGenerator(device, data, parameters)
+ex_runner = ExperimentRunner(device, data, parameters)
 
 #execute experiments and save trained models
-generator.execute_experiment(save_models=True, save_path="experiment")
+experiment_results = ex_runner.execute_experiment(save_models=True, save_path="experiment")
 
 ```
 
