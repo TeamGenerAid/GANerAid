@@ -6,7 +6,7 @@ GANerAid is a library meant to create synthetic clinical trials in order to anon
 
 Therefore a Generative Adversarial Network [(GAN)](https://machinelearningmastery.com/what-are-generative-adversarial-networks-gans/) is used in a way to process and synthesise tabular data, containing continous and binary variables instead of images.
 
-The libray consist of (3) four diffenrent areas:
+The libray consist of four diffenrent areas:
 - Data preprocessing 
 - Data generation
 - Parameter optimisation
@@ -58,7 +58,7 @@ gan = GANerAid(device, lr_d=0.000005, lr_g=0.000005)
 | lr_d     | Learning rate of the generator | 5e-4|
 | lr_g     | Learning rate of the discriminator     |   5e-4 |
 | noise_factor | Noise factor defining how large the noise vector as input for the generator will be based on the nr of columns. E.g. 10 columns and a noise factor of 5 results in an input vector with the length of 50       |    5 |
-| hidden_feature_space | The feature space of the LSTm Cells| 200|
+| hidden_feature_space | The feature space of the LSTM Cells| 200|
 | batch_size | The batch size defines the number of samples that will be propagated through the network. | 100 |
 | batch_size | The batch size of how many rows the generator generates at once. A lower number will make the correlation better. A higher number will reproduce the distributions of the colujmsn better. | 25 |
 | binary_noise | The upper limit of the uniformly distributed noise that will be added to binary columns in the preprocessing. | 0.2 |
