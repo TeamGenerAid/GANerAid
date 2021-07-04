@@ -42,6 +42,7 @@ class GANerAid:
         self.noise_size = None
 
         # dataset parameters
+        self.orig_dataset = None
         self.dataset_rows = None
         self.dataset_columns = None
 
@@ -66,6 +67,7 @@ class GANerAid:
             raise ValueError('Dataset is not of type Pandas Dataframe')
 
         if not self.fitted:
+            self.orig_dataset = dataset
             self.processor = DataProcessor(dataset)
             self.dataset = self.processor.preprocess(self.binary_noise, aug_factor=aug_factor)
 
@@ -114,6 +116,7 @@ class GANerAid:
         gan_params = self.gan.get_params()
         torch.save({
             "gan_params": gan_params,
+            "dataset": self.orig_dataset,
             "kwargs": self.kwargs
         }, path + "/" + name + ".gan")
         self.logger.print("Gan successfully saved under the path {} and the name {}", path, name)
@@ -129,5 +132,6 @@ class GANerAid:
     def load(device, path, name="GANerAid"):
         restored = torch.load(path + "/" + name + ".gan")
         gan = GANerAid(device, **restored["kwargs"])
+        gan.fit(restored["dataset"], epochs=0, verbose=False)
         gan.gan = GANerAidGAN.setup_from_params(restored["gan_params"], device)
         return gan

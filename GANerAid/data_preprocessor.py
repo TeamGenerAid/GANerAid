@@ -45,14 +45,15 @@ class DataProcessor:
         if aug_factor > 0:
             copied_data = scaled_data.copy()
 
-            for x in range(int(copied_data.shape[1] * aug_factor)):
-                if x not in self.binary_columns:
-                    for y in range(copied_data.shape[0]):
-                        noise = np.random.uniform(-0.00001, .00001)
-                        if -1 <= (copied_data[y, x] + noise) <= 1:
-                            copied_data[y, x] = copied_data[y, x] + noise
-                        else:
-                            copied_data[y, x] = copied_data[y, x] - noise
+            for _ in range(aug_factor):
+                for x in range(int(copied_data.shape[1])):
+                    if x not in self.binary_columns:
+                        for y in range(copied_data.shape[0]):
+                            noise = np.random.uniform(.00001, .00001)
+                            if -1 <= (copied_data[y, x] + noise) <= 1:
+                                copied_data[y, x] = copied_data[y, x] + noise
+                            else:
+                                copied_data[y, x] = copied_data[y, x] - noise
 
             data2 = np.append(scaled_data, copied_data, axis=0)
 
