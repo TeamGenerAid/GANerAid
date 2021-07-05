@@ -13,6 +13,7 @@ setup(
     author='TeamGenerAid',
     author_email='generaid.thu@gmail.com',
     description='Gan library to create and validate synthetic tabular data',
+    long_description=long_description,
     install_requires=[
         'numpy>=1.19.5',
         'pandas>=1.2.4',
