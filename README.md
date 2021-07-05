@@ -2,7 +2,7 @@
 
 # GANerAid
 
-![GenerAid](generaid.png)
+![GANerAid](ganeraid.png)
 
 
 GANerAid is a library meant to create synthetic clinical trials in order to anonymise and augment patient data in the field of medical science. The generated data are of the same statistical properties like as the original input data to reproduce the patient data in the best possible way without copying it.
