@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='GANerAid',
-    version='0.27',
+    version='1.0',
 
     url='https://github.com/TeamGenerAid/GANerAid'
         '',
