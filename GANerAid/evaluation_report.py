@@ -57,10 +57,9 @@ class EvaluationReport:
         print('\n')
         print("DUPLICATES")
         print("----------------------------")
-        print("Real dataset contains {} duplicated rows", format(str(self.original_data.duplicated().sum())))
-        print("Generated dataset contains {} duplicated rows", format(str(self.generated_data.duplicated().sum())))
-        print("Real and generated dataset contain {} duplicated rows",
-              format(str(pd.concat([self.original_data, self.generated_data]).duplicated().sum())))
+        print("Real dataset contains {} duplicated rows".format(str(self.original_data.duplicated().sum())))
+        print("Generated dataset contains {} duplicated rows".format(str(self.generated_data.duplicated().sum())))
+        print("Real and generated dataset contain {} duplicated rows".format(str(pd.concat([self.original_data, self.generated_data]).duplicated().sum())))
 
     def get_KL_divergence(self):
         print('\n')
