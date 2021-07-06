@@ -8,7 +8,7 @@ import numpy as np
 def add_noise(value, binary_noise):
     if value < 0:
         return value + np.random.uniform(0, binary_noise)
-    if value > 0:
+    if value >= 0:
         return value - np.random.uniform(0, binary_noise)
 
 
