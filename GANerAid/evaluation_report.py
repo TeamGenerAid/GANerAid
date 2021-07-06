@@ -67,8 +67,8 @@ class EvaluationReport:
         print("----------------------------")
 
         if self.original_data.shape != self.generated_data.shape:
-            raise ValueError("The clalculation of the Kullback Leibler divergence can only be done if the datasets "
-                             "have th same size.")
+            raise ValueError("The calculation of the Kullback Leibler divergence can only be done if the datasets "
+                             "have the same size.")
 
         for column in self.original_data.columns:
             original_values = self.original_data[column].to_numpy()
