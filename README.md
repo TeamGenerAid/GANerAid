@@ -76,7 +76,7 @@ E.g an aug_factor of 1 will double the value.
 gan.fit(data, epochs=5, aug_factor=1)
 ```
 
-By doing so, the GAN will be fitted to the original input data + augmented data with the same size as the original input data.
+By doing so, the GAN will be fitted to the original input data + augmented data with the same size as the original input data. It should be used with caution, since at some point the distributions and correlation of the original data will be lost.
 
 ### Data Postprocessing
 
