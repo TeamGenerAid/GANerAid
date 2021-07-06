@@ -44,9 +44,9 @@ pip install GANerAid
 For the dataset to be passed to the library, the following must be ensured:
 - Binary variables must be converted to 0 and 1
 - The dataset must be passed in a pandas dataframe
-- Categorical variables should be avoided and therefore removed
+- Categorical variables should be avoided but can be replaced by a series of binary variables.
 
-Internally the library is then further preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragrahp is also handled here.
+Internally the library is then further preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragraph is also handled here.
 
 ### Parameters
 
