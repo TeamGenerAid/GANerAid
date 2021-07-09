@@ -52,7 +52,7 @@ class GANerAidDiscriminator(torch.nn.Module):
 
 
 class GANerAidGenerator(nn.Module):
-    def __init__(self, device, noise, rows, columns, hidden_size, lstm_layers=1, leaky_relu=0.2, bidirectional=True):
+    def __init__(self, device, noise, rows, columns, hidden_size, lstm_layers=1, bidirectional=True):
         super(GANerAidGenerator, self).__init__()
         self.rows = rows
         self.columns = columns
@@ -97,7 +97,7 @@ class GANerAidGenerator(nn.Module):
 
 class GANerAidGAN:
     def __init__(self, noise, rows, columns, hidden_size, device, lstm_layers=1, dropout_d=0.3, leaky_relu_d=0.2,
-                 leaky_relu_g=0.2, bidirectional=True):
+                 bidirectional=True):
         super(GANerAidGAN, self).__init__()
         self.device = device
         self.rows = rows
@@ -107,12 +107,11 @@ class GANerAidGAN:
         self.lstm_layers = lstm_layers
         self.dropout_d = dropout_d
         self.leaky_relu_d = leaky_relu_d
-        self.leaky_relu_g = leaky_relu_g
         self.bidirectional = bidirectional
 
-        self.generator = GANerAidGenerator(device, noise, rows, columns, hidden_size, lstm_layers=1, leaky_relu=0.2,
-                                           bidirectional=True).to(device)
-        self.discriminator = GANerAidDiscriminator(rows, columns, dropout=0.3, leaky_relu=0.2).to(device)
+        self.generator = GANerAidGenerator(device, noise, rows, columns, hidden_size, lstm_layers=self.lstm_layers,
+                                           bidirectional=self.bidirectional).to(device)
+        self.discriminator = GANerAidDiscriminator(rows, columns, dropout=self.dropout_d, leaky_relu=self.leaky_relu_d).to(device)
 
     def train(self):
         self.generator.train()
@@ -132,7 +131,6 @@ class GANerAidGAN:
                     "lstm_layers": self.lstm_layers,
                     "dropout_d": self.dropout_d,
                     "leaky_relu_d": self.leaky_relu_d,
-                    "leaky_relu_g": self.leaky_relu_g,
                     "bidirectional": self.bidirectional
                     }
 
@@ -148,11 +146,9 @@ class GANerAidGAN:
         lstm_layers = params["lstm_layers"]
         dropout_d = params["dropout_d"]
         leaky_relu_d = params["leaky_relu_d"]
-        leaky_relu_g = params["leaky_relu_g"]
         bidirectional = params["bidirectional"]
 
-        gan = GANerAidGAN(noise, rows, columns, hidden_size, device, lstm_layers, dropout_d, leaky_relu_d, leaky_relu_g,
-                          bidirectional)
+        gan = GANerAidGAN(noise, rows, columns, hidden_size, device, lstm_layers, dropout_d, leaky_relu_d, bidirectional)
         gan.generator.load_state_dict(generator_params)
         gan.discriminator.load_state_dict(discriminator_params)
         return gan
