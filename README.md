@@ -1,8 +1,7 @@
 [![PyPI version](https://badge.fury.io/py/GANerAid.svg)](https://badge.fury.io/py/GANerAid)
 
-# GANerAid
-
-![GenerAid](generaid.png)
+# GANerAid                                               
+<img src="ganeraid.png" width="150">
 
 
 GANerAid is a library meant to create synthetic clinical trials in order to anonymise and augment patient data in the field of medical science. The generated data are of the same statistical properties like as the original input data to reproduce the patient data in the best possible way without copying it.
@@ -45,9 +44,9 @@ pip install GANerAid
 For the dataset to be passed to the library, the following must be ensured:
 - Binary variables must be converted to 0 and 1
 - The dataset must be passed in a pandas dataframe
-- Categorical variables should be avoided and therefore removed
+- Categorical variables should be avoided but can be replaced by a series of binary variables.
 
-Internally the library is then further preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragrahp is also handled here.
+Internally the library is then further preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragraph is also handled here.
 
 ### Parameters
 
@@ -77,7 +76,7 @@ E.g an aug_factor of 1 will double the value.
 gan.fit(data, epochs=5, aug_factor=1)
 ```
 
-By doing so, the GAN will be fitted to the original input data + augmented data with the same size as the original input data.
+By doing so, the GAN will be fitted to the original input data + augmented data with the same size as the original input data. It should be used with caution, since at some point the distributions and correlation of the original data will be lost.
 
 ### Data Postprocessing
 
