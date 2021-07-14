@@ -147,7 +147,13 @@ evaluation_report.get_duplicates()
 #### get_KL_divergence
 This method prints the Kullback-Leibler divergence, which is a metric of how similar two ditributions are. The method will compare the two datsets column-wise. Lower values mean more similar distributions. More to Kullback-Leibler divergence can be found [here](https://towardsdatascience.com/kl-divergence-python-example-b87069e4b810)
 
-
+#### decision_tree
+This method trains a RandomForestClassifier on the original data and then applies it on the generated data to find out whether it is realistic.
+This method takes the name of one of the columns of the dataset as a parameter. Please note: this needs to be a binary column since the trained model is a classifier and will not be able to work with continuous columns!
+```
+evaluation_report.decision_tree("diagnosis")
+```
+The more similar the values of the two classification reports are the more realistic is the generated data. If the accuracy of the classification report for the generated data is 1.0 (while the other is not as good) then the generated data likely does not reflect the whole range of values.
 ## Dataset
 You can simply try it out using Kaggles [Breast cancer dataset](https://www.kaggle.com/merishnasuwal/breast-cancer-prediction-dataset) as input.
 
