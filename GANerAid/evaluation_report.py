@@ -5,6 +5,8 @@ import pandas as pd
 from tab_gan_metrics import TableEvaluator
 import warnings
 from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
 
 warnings.filterwarnings('ignore')
 
@@ -76,3 +78,45 @@ class EvaluationReport:
             kl_div = np.sum(
                 np.where(original_values != 0, original_values * np.log(original_values / generated_values), 0))
             print("{} : {}".format(column, kl_div))
+
+    def decision_tree(self, column_name):
+        print('\n')
+        print("DECISION TREE APPROACH")
+        print("----------------------------")
+
+        if self.generated_data.shape[0] <= 0:
+            raise ValueError("The generated data needs to be available.")
+
+        Y_orig = self.original_data[column_name].to_numpy()
+        X_orig = self.original_data.drop([column_name], axis=1).to_numpy()
+
+        cutoff = int(Y_orig.shape[0]*0.25)*-1
+
+        Y_orig_train = Y_orig[:cutoff]
+        X_orig_train = X_orig[:cutoff, :]
+
+        Y_orig_val= Y_orig[cutoff:]
+        X_orig_val = X_orig[cutoff:, :]
+
+        clf = RandomForestClassifier(random_state=42)
+        clf.fit(X_orig_train, Y_orig_train)
+        
+        print("Classification Report for the original data:")
+        print(classification_report(Y_orig_val, clf.predict(X_orig_val)))
+
+        Y_fake = self.generated_data[column_name].to_numpy()
+        X_fake = self.generated_data.drop([column_name], axis=1).to_numpy()
+
+        cutoff2 = int(Y_fake.shape[0]*0.25)*-1
+
+        Y_fake_train = Y_fake[:cutoff2]
+        X_fake_train = X_fake[:cutoff2, :]
+
+        Y_fake_val= Y_fake[cutoff2:]
+        X_fake_val = X_fake[cutoff2:, :]
+
+        clf2 = RandomForestClassifier(random_state=42)
+        clf2.fit(X_fake_train, Y_fake_train)
+        
+        print("Classification report for the generated data:")
+        print(classification_report(Y_fake_val, clf2.predict(X_fake_val)))
