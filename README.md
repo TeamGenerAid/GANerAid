@@ -149,7 +149,7 @@ This method prints the Kullback-Leibler divergence, which is a metric of how sim
 
 #### decision_tree
 This method trains a RandomForestClassifier on the original data and then applies it on the generated data to find out whether it is realistic.
-This method takes the name of one of the columns of the dataset as a parameter. Please note: this needs to be a binary column since the trained model is a classifier and will not be able to wor with continuous columns!
+This method takes the name of one of the columns of the dataset as a parameter. Please note: this needs to be a binary column since the trained model is a classifier and will not be able to work with continuous columns!
 ```
 evaluation_report.decision_tree("diagnosis")
 ```
