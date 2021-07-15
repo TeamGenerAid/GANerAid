@@ -107,16 +107,5 @@ class EvaluationReport:
         Y_fake = self.generated_data[column_name].to_numpy()
         X_fake = self.generated_data.drop([column_name], axis=1).to_numpy()
 
-        cutoff2 = int(Y_fake.shape[0]*0.25)*-1
-
-        Y_fake_train = Y_fake[:cutoff2]
-        X_fake_train = X_fake[:cutoff2, :]
-
-        Y_fake_val= Y_fake[cutoff2:]
-        X_fake_val = X_fake[cutoff2:, :]
-
-        clf2 = RandomForestClassifier(random_state=42)
-        clf2.fit(X_fake_train, Y_fake_train)
-        
         print("Classification report for the generated data:")
-        print(classification_report(Y_fake_val, clf2.predict(X_fake_val)))
+        print(classification_report(Y_fake, clf.predict(X_fake)))
