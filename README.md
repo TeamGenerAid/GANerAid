@@ -4,11 +4,11 @@
 <img src="ganeraid.png" width="150">
 
 
-GANerAid is a library meant to create synthetic clinical trials in order to anonymise and augment patient data in the field of medical science. The generated data are of the same statistical properties like as the original input data to reproduce the patient data in the best possible way without copying it.
+GANerAid is a library meant to create synthetic clinical trials in order to anonymise and augment patient data in the field of medical science. The generated data are of the same statistical properties like the original input data to reproduce the patient data in the best possible way without copying it.
 
-Therefore a Generative Adversarial Network [(GAN)](https://machinelearningmastery.com/what-are-generative-adversarial-networks-gans/) is used in a way to process and synthesise tabular data, containing continous and binary variables instead of images.
+Therefore, a Generative Adversarial Network [(GAN)](https://machinelearningmastery.com/what-are-generative-adversarial-networks-gans/) is used in a way to process and synthesise tabular data, containing continous and binary variables instead of images.
 
-The libray consist of four diffenrent areas:
+The library consists of four different areas:
 - Data preprocessing 
 - Data generation
 - Parameter optimisation
@@ -41,12 +41,12 @@ pip install GANerAid
 ## Provided fuctions and Usage
 ### Data Preprocessing 
 
-For the dataset to be passed to the library, the following must be ensured:
+For the data set to be passed to the library, the following must be ensured:
 - Binary variables must be converted to 0 and 1
-- The dataset must be passed in a pandas dataframe
+- The data set must be passed in as a pandas dataframe
 - Categorical variables should be avoided but can be replaced by a series of binary variables.
 
-Internally the library is then further preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragraph is also handled here.
+Internally the library is then further preprocessing the data. The data gets scaled to the range between -1 and 1. Afterwards, as small amount of noise is added to the binary columns. The data augmentation discussed in the next paragraph is also handled there.
 
 ### Parameters
 
