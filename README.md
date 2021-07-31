@@ -9,7 +9,7 @@ GANerAid is a library meant to create synthetic clinical trials in order to anon
 Therefore, a Generative Adversarial Network [(GAN)](https://machinelearningmastery.com/what-are-generative-adversarial-networks-gans/) is used in a way to process and synthesise tabular data, containing continous and binary variables instead of images.
 
 The library relies on the following architecture:                  
-<img src="architecture.png" width="300">
+<img src="architecture.png" width="600">
 
 
 The generic functions were also applied on tabular data of the finacial sector and even credit fraud data with respective results. It can be used for any tabular data sets containing binary and continous variables.
