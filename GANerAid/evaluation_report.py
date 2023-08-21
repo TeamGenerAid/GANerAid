@@ -47,7 +47,7 @@ class EvaluationReport:
         print("Euclidean Distance {}".format(str(euclidean_dist)))
 
         if self.original_data.shape != self.generated_data.shape:
-            raise ValueError("The RMSE can only be calculated when the datasets ave the same size.")
+            raise ValueError("The RMSE can only be calculated when the datasets have the same size.")
 
         for column in self.original_data.columns:
             original_values = self.original_data[column]
